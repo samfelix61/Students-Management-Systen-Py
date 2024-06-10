@@ -5,7 +5,7 @@ class Post:
     @classmethod
     def create_post(cls, title, content, user_id):
         sql = "INSERT INTO posts(title, content, user_id) VALUES(?, ?, ?)"
-        CURSOR.execute(sql, (title, content, 4))
+        CURSOR.execute(sql, (title, content, user_id))
         CONN.commit()
 
         return CURSOR.lastrowid

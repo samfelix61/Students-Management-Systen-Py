@@ -10,12 +10,12 @@ class Comments:
 
         return CURSOR.lastrowid
 
-    # get comment by id
+    # get comment by user id
     @classmethod
-    def get_comment_by_id(cls, comment_id):
-        sql = "SELECT * FROM comments WHERE id = ?"
-        CURSOR.execute(sql, (comment_id,))
-        return CURSOR.fetchone()
+    def get_comment_by_user_id(cls, user_id):
+        sql = "SELECT * FROM comments WHERE user_id = ?"
+        CURSOR.execute(sql, (user_id,))
+        return CURSOR.fetchall()
 
     # get comment by post id
     @classmethod
@@ -39,9 +39,16 @@ class Comments:
         CONN.commit()
         return comment_id
 
+    # count comments
+    @classmethod    
+    def count_comments(cls):
+        sql = "SELECT COUNT(*) FROM comments"
+        CURSOR.execute(sql)
+        return CURSOR.fetchone()
+
     # count comments belonging to a post
     @classmethod
-    def count_comments(cls, post_id):
+    def count_comments_by_post_id(cls, post_id):
         sql = "SELECT COUNT(*) FROM comments where post_id = ?"
-        CURSOR.execute(sql)
+        CURSOR.execute(sql, (post_id,))
         return CURSOR.fetchone()

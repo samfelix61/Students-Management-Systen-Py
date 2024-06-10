@@ -7,7 +7,6 @@ class User:
         sql = "INSERT INTO users(name, email, age) VALUES(?, ?, ?)"
         CURSOR.execute(sql, (name, email, age))
         CONN.commit()
-
         return CURSOR.lastrowid
 
     # Get user by id
