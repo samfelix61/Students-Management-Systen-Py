@@ -67,3 +67,39 @@ print(all_posts)
 # count posts
 count_posts = post.count_posts()
 print(f"\nTotal number of posts: {count_posts[0]}")
+
+
+
+
+# COMMENTS OPERATIONS
+print("\n-------------------COMMENTS OPERATIONS---------------------------------")
+create_comment = Comments()
+# create comment
+comment_id = create_comment.create_comment("This is a comment", 1, 1)
+print(f"\nComment {comment_id} created")
+
+# fetch comment by id
+single_comment = create_comment.get_comment_by_id(1)
+print("\nFetch comment by id ")
+
+# fetch comment by post id
+comments_by_post_id = create_comment.get_comment_by_post_id(1)
+print("\nFetch comment by post id ")
+print(comments_by_post_id)
+
+# fetch all comments
+all_comments = create_comment.fetch_all_comments()
+print("\nAll comments")
+print(all_comments)
+
+# count comments
+count_comments = create_comment.count_comments(1)
+print(f"\nTotal number of comments: {count_comments[0]}")
+
+#count comments by post id
+count_comments_by_post_id = create_comment.count_comments(1)
+print(f"\nTotal number of comments for post 1: {count_comments_by_post_id[0]}")
+
+# delete comment by id
+deleted_comment_id = create_comment.delete_comment_by_id(1)
+print(f"\nComment {deleted_comment_id} deleted successfully")
