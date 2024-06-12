@@ -12,7 +12,9 @@ The Students Management System is a Python CLI application designed to manage st
     • View student profile: Students can view their own profiles.
     • View all students: Users can view the list of all registered students.
     • Search for students by name: Users can search for students using their names.
+
 ## Courses
+
     • View available courses: Users can view a list of all available courses.
     • Enroll in a course: Students can enroll in available courses.
     • Drop a course: Students can drop courses they are enrolled in.
