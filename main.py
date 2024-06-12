@@ -1,222 +1,212 @@
-from lib.user import User
-from lib.comments import Comments
-from lib.post import Post
-import sys
+import argparse
+from student import *
+from course import *
+from instructor import *
+from admin import *
+from database import create_tables
 
-def main_menu():
+def print_menu(options):
+    print("\nMain Menu")
+    for key, value in options.items():
+        print(f"{key}. {value['desc']}")
+    choice = input("Select an option: ")
+    return choice
+
+def main():
+    create_tables()
+
     while True:
-        print("=============MAIN MENU=================")
-        print("1.Manage users")
-        print("2.Manage posts")
-        print("3.Manage comments")
-        print("4.Exit")
+        main_menu = {
+            "1": {"desc": "Manage Students", "func": student_menu},
+            "2": {"desc": "Manage Courses", "func": course_menu},
+            "3": {"desc": "Manage Instructors", "func": instructor_menu},
+            "4": {"desc": "Manage Admins", "func": admin_menu},
+            "5": {"desc": "Exit", "func": exit}
+        }
+        choice = print_menu(main_menu)
+        if choice in main_menu:
+            main_menu[choice]["func"]()
 
-        choice = input("\nEnter your choice: ")
-        if choice =="1":
-            return user_operations()
+def student_menu():
+    options = {
+        "1": {"desc": "Register as a student", "func": register_student_prompt},
+        "2": {"desc": "Update student profile", "func": update_student_prompt},
+        "3": {"desc": "View student profile", "func": view_student_prompt},
+        "4": {"desc": "View all students", "func": view_all_students},
+        "5": {"desc": "Search for students by name", "func": search_students_prompt},
+        "6": {"desc": "Back to main menu", "func": main}
+    }
+    choice = print_menu(options)
+    if choice in options:
+        options[choice]["func"]()
 
-        elif choice =="2":
-            return post_operations()
-        
-        elif choice =="3":
-            return comments_operations()
+def course_menu():
+    options = {
+        "1": {"desc": "View available courses", "func": view_courses},
+        "2": {"desc": "Enroll in a course", "func": enroll_course_prompt},
+        "3": {"desc": "Drop a course", "func": drop_course_prompt},
+        "4": {"desc": "View enrolled courses", "func": view_enrolled_courses_prompt},
+        "5": {"desc": "View course details", "func": view_course_details_prompt},
+        "6": {"desc": "View course grades", "func": view_course_grades_prompt},
+        "7": {"desc": "Search for courses by title", "func": search_courses_prompt},
+        "8": {"desc": "Add a new course", "func": add_course_prompt},
+        "9": {"desc": "View all available courses", "func": view_all_courses},
+        "10": {"desc": "Back to main menu", "func": main}
+    }
+    choice = print_menu(options)
+    if choice in options:
+        options[choice]["func"]()
 
-        elif choice =="4":
-            sys.exit()
-        
-        else:
-            print("Invalid Input")
-        
+def instructor_menu():
+    options = {
+        "1": {"desc": "Register as an instructor", "func": register_instructor_prompt},
+        "2": {"desc": "Update instructor profile", "func": update_instructor_prompt},
+        "3": {"desc": "View instructor profile", "func": view_instructor_prompt},
+        "4": {"desc": "View all instructors", "func": view_all_instructors},
+        "5": {"desc": "Add new courses", "func": add_course_prompt},
+        "6": {"desc": "Update course details", "func": update_course_prompt},
+        "7": {"desc": "Remove courses", "func": remove_course_prompt},
+        "8": {"desc": "View students enrolled in a course", "func": view_students_in_course_prompt},
+        "9": {"desc": "Assign grades to students", "func": assign_grade_prompt},
+        "10": {"desc": "Back to main menu", "func": main}
+    }
+    choice = print_menu(options)
+    if choice in options:
+        options[choice]["func"]()
 
+def admin_menu():
+    options = {
+        "1": {"desc": "Generate student report card", "func": generate_student_report_card_prompt},
+        "2": {"desc": "View course statistics report", "func": view_course_statistics},
+        "3": {"desc": "View enrollment statistics report", "func": view_enrollment_statistics},
+        "4": {"desc": "Back to main menu", "func": main}
+    }
+    choice = print_menu(options)
+    if choice in options:
+        options[choice]["func"]()
 
-def user_operations():
-    while True:
-        print("\n*******USER MENU********")
-        print("1.Add user")
-        print("2.Update user")
-        print("3.Fetch all users")
-        print("4.Fetch user by id")
-        print("5.Get average age of all users")
-        print("6.Delete user")
-        print("7.Retun to main menu")
+def register_student_prompt():
+    name = input("Enter name: ")
+    email = input("Enter email: ")
+    profile = input("Enter profile: ")
+    register_student(name, email, profile)
+    print("Student registered successfully.")
 
-        choice = input("\nEnter your choice: ")
-        
-        user = User()
-        if choice =="1":
-            name = input("Enter name: ")
-            email = input("Enter email: ")
-            age = input("Enter age: ")
+def update_student_prompt():
+    student_id = int(input("Enter student ID: "))
+    name = input("Enter name (leave blank to keep current): ")
+    email = input("Enter email (leave blank to keep current): ")
+    profile = input("Enter profile (leave blank to keep current): ")
+    update_student(student_id, name if name else None, email if email else None, profile if profile else None)
+    print("Student profile updated successfully.")
 
-            user_id = user.create_user(name, email, age)
-            print(f"User with id {user_id} added successfully")
-          
+def view_student_prompt():
+    student_id = int(input("Enter student ID: "))
+    view_student(student_id)
+    print("Student profile displayed successfully.")
 
-        elif choice =="2":
-            user_id = input("Enter the id of the user you want to update: ")
-            name = input("Enter new name: ")
-            email = input("Enter new email: ")
-            age = input("Enter new age: ")
+def search_students_prompt():
+    name = input("Enter name to search: ")
+    search_students(name)
+    print("Student search completed successfully.")
 
-            userID = user.update_user_by_id(user_id , name, email, age)
-            print(f"User with id {userID} updated successfully")
-            
+def enroll_course_prompt():
+    student_id = int(input("Enter student ID: "))
+    course_id = int(input("Enter course ID: "))
+    enroll_course(student_id, course_id)
+    print("Enrolled in course successfully.")
 
-        elif choice =="3":
-            all_users = user.fetch_all_users()
-            print("\nAll users")
-            print(all_users)
+def drop_course_prompt():
+    student_id = int(input("Enter student ID: "))
+    course_id = int(input("Enter course ID: "))
+    drop_course(student_id, course_id)
+    print("Dropped course successfully.")
 
-        elif choice =="4":
-            user_id = input("Enter the id of the user you want to fetch: ")
-            single_user = user.get_user(user_id)
-            print(single_user)
+def view_enrolled_courses_prompt():
+    student_id = int(input("Enter student ID: "))
+    view_enrolled_courses(student_id)
+    print("Enrolled courses displayed successfully.")
 
+def view_course_details_prompt():
+    course_id = int(input("Enter course ID: "))
+    view_course_details(course_id)
+    print("Course details displayed successfully.")
 
-        elif choice =="5":
-            average_age = user.average_age_of_all_users()
-            print(f"\nAverage age of all users: {average_age[0]}")
+def view_course_grades_prompt():
+    student_id = int(input("Enter student ID: "))
+    view_course_grades(student_id)
+    print("Course grades displayed successfully.")
 
+def search_courses_prompt():
+    title = input("Enter title to search: ")
+    search_courses(title)
+    print("Course search completed successfully.")
 
-        elif choice =="6":
-            user_id = input("Enter the id of the user you want to delete: ")
-            deleted_user_id = user.delete_user_by_id(user_id)
-            print(f"\nUser {deleted_user_id} deleted successfully")
+def register_instructor_prompt():
+    name = input("Enter name: ")
+    email = input("Enter email: ")
+    profile = input("Enter profile: ")
+    register_instructor(name, email, profile)
+    print("Instructor registered successfully.")
 
+def update_instructor_prompt():
+    instructor_id = int(input("Enter instructor ID: "))
+    name = input("Enter name (leave blank to keep current): ")
+    email = input("Enter email (leave blank to keep current): ")
+    profile = input("Enter profile (leave blank to keep current): ")
+    update_instructor(instructor_id, name if name else None, email if email else None, profile if profile else None)
+    print("Instructor profile updated successfully.")
 
-        elif choice =="7":
-            return main_menu()
-        
-        else:
-            print("Invalid Input")
+def view_instructor_prompt():
+    instructor_id = int(input("Enter instructor ID: "))
+    view_instructor(instructor_id)
+    print("Instructor profile displayed successfully.")
 
-    
+def add_course_prompt():
+    title = input("Enter course title: ")
+    description = input("Enter course description: ")
+    instructor_id = int(input("Enter instructor ID: "))
+    add_course(title, description, instructor_id)
+    print("Course added successfully.")
 
-def post_operations():
-    while True:
-        print("\n*******POST MENU********")
-        print("1.Add post")
-        print("2.Update post")
-        print("3.Fetch all posts")
-        print("4.Fetch post by id")
-        print("5.Fetch posts by user id")
-        print("6.Count all posts")
-        print("7.Retun to main menu")
+def view_all_courses():
+    conn = sqlite3.connect('school.db')
+    c = conn.cursor()
+    c.execute('SELECT * FROM Courses')
+    courses = c.fetchall()
+    conn.close()
+    for course in courses:
+        print(f"ID: {course[0]}, Title: {course[1]}, Description: {course[2]}, Instructor ID: {course[3]}")
+    print("All available courses displayed successfully.")
 
+def update_course_prompt():
+    course_id = int(input("Enter course ID: "))
+    title = input("Enter course title (leave blank to keep current): ")
+    description = input("Enter course description (leave blank to keep current): ")
+    update_course(course_id, title if title else None, description if description else None)
+    print("Course details updated successfully.")
 
-        choice = input("\nEnter your choice: ")
+def remove_course_prompt():
+    course_id = int(input("Enter course ID: "))
+    remove_course(course_id)
+    print("Course removed successfully.")
 
-        post = Post()
-        if choice=="1":
-            title = input("Enter title: ")
-            content = input("Enter content: ")
-            user_id = input("Enter user id: ")
+def view_students_in_course_prompt():
+    course_id = int(input("Enter course ID: "))
+    view_students_in_course(course_id)
+    print("Students in course displayed successfully.")
 
-            
-            created_post_id = post.create_post(title, content, user_id)
-            print(f"Post {created_post_id} created")
+def assign_grade_prompt():
+    student_id = int(input("Enter student ID: "))
+    course_id = int(input("Enter course ID: "))
+    grade = input("Enter grade: ")
+    assign_grade(student_id, course_id, grade)
+    print("Grade assigned successfully.")
 
-        elif choice=="2":
-            post_id = input("Enter post id: ")
-            title = input("Enter new title: ")
-            content = input("Enter new content: ")
+def generate_student_report_card_prompt():
+    student_id = int(input("Enter student ID: "))
+    generate_student_report_card(student_id)
+    print("Student report card generated successfully.")
 
-            updated_post = post.update_post_by_id(post_id, title, content)
-            print(f"\nPost {updated_post} updated")
-
-        elif choice=="3":
-            all_posts = post.fetch_all_posts()
-            print("\nAll posts")
-            print(all_posts)
-        
-        elif choice=="4":
-            post_id = input("Enter post id: ")
-            single_post = post.get_post_by_id(post_id)
-            print("\nFetch post by id ")
-            print(single_post)
-        
-        elif choice=="5":
-            user_id = input("Enter user id: ")
-
-            posts_by_user_id = post.get_post_by_user_id(user_id)
-            print("\nFetch post by user id ")
-            print(posts_by_user_id)
-
-        elif choice=="6":
-            count_posts = post.count_posts()
-            print(f"\nTotal number of posts: {count_posts[0]}")
-        
-        elif choice=="7":
-            return main_menu()
-
-        else:
-            print("Invalid Input")
-
-
-
-def comments_operations():
-    while True:
-        print("\n*******COMMENTS MENU********")
-        print("1.Add comment")
-        print("2.Update comment")
-        print("3.Fetch all comment")
-        print("4.Fetch comments by user id")
-        print("5.Fetch comments by post id")
-        print("6.Count all comments")
-        print("7.Delete comment")
-        print("8.Retun to main menu")
-
-
-        choice = input("\nEnter your choice: ")
-
-        comment = Comments()
-
-        if choice=="1":
-            user_id = input("Enter user id: ")
-            post_id = input("Enter post id: ")
-            comment_ = input("Enter comment: ")
-            comment_id = comment.create_comment(comment_, post_id, user_id)
-
-            print(f"\nComment {comment_id} created")
-
-        elif choice=="2":
-            pass
-        
-        elif choice=="3":
-            all_comments = comment.fetch_all_comments()
-            print("\nAll comments")
-            print(all_comments)
-
-        elif choice=="4":
-            user_id = input("Enter user id: ")
-            comments_by_user_id = comment.get_comment_by_user_id(user_id)
-            print("\nFetch comment by user id ")
-            print(comments_by_user_id)
-
-        elif choice=="5":
-            post_id = input("Enter post id: ")
-            comments_by_post_id = comment.get_comment_by_post_id(post_id)
-            print("\nFetch comment by post id ")
-            print(comments_by_post_id)
-
-        elif choice=="6":
-            count_comments = comment.count_comments()
-            print(f"\nTotal number of comments: {count_comments[0]}")
-        
-        elif choice=="7":
-            comment_id = input("Enter comment id: ")
-            deleted_comment_id = comment.delete_comment_by_id(comment_id)
-            print(f"\nComment {deleted_comment_id} deleted successfully")   
-
-        elif choice=="8":
-            return main_menu()
-
-
-main_menu()
-
-
-
-
-
-
-
+if __name__ == '__main__':
+    main()

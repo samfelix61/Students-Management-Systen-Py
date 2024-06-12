@@ -1,0 +1,23 @@
+/students_management_system
+    ├── /students
+    │   ├── student.py
+    │   ├── student_controller.py
+    │   └── student_view.py
+    ├── /courses
+    │   ├── course.py
+    │   ├── course_controller.py
+    │   └── course_view.py
+    ├── /instructors
+    │   ├── instructor.py
+    │   ├── instructor_controller.py
+    │   └── instructor_view.py
+    ├── /enrollments
+    │   ├── enrollment.py
+    │   ├── enrollment_controller.py
+    │   └── enrollment_view.py
+    ├── /admin
+    │   ├── admin.py
+    │   ├── admin_controller.py
+    │   └── admin_view.py
+    ├── database.py
+    └── main.py
